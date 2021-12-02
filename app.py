@@ -26,7 +26,7 @@ def index():
         try:
             db.session.add(new_task)
             db.session.commit()
-            return redirect('/')
+            return redirect('/gettin/')
         except:
             return 'There was an issue adding your task'
     else:
@@ -39,7 +39,7 @@ def delete(id):
     try:
         db.session.delete(task_to_delete)
         db.session.commit()
-        return redirect('/')
+        return redirect('/gettin/')
     except:
         return 'there was problem deleting that task'
 @app.route('/update/<int:id>', methods=['GET', 'POST'])
@@ -50,12 +50,25 @@ def update(id):
 
         try:
             db.session.commit()
-            return redirect('/')
+            return redirect('/gettin/')
         except:
             return 'there was issue updating your task'
 
     else:
         return render_template('update.html', task=task)
+
+@app.route('/gettin/')
+def gettin():
+    tasks = Todo.query.order_by(Todo.date_created).all()
+    return render_template('page.html', tasks=tasks)
+
+@app.route('/devinfo/')
+def devinfo():
+    return render_template('devinfo.html')
+
+@app.route('/back/')
+def back():
+    return render_template('index.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
